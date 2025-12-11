@@ -1,0 +1,194 @@
+/* ======================================
+   RESET + BODY
+====================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  padding-top: 60px; /* centre visuel */
+  font-family: "Inter", sans-serif;
+
+  background: radial-gradient(circle at top, #0a0e16, #05070c 80%);
+  color: #f5e4c3;
+}
+
+/* ======================================
+   TITRE
+====================================== */
+h1 {
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: 800;
+  text-shadow: 0 0 10px rgba(255,220,150,0.2);
+}
+
+/* ======================================
+   BLOC RECHERCHE (input + boutons)
+====================================== */
+#city-input,
+#search-btn,
+#notify-btn {
+  display: block;
+  margin: 10px auto;   /* centre + espace */
+}
+
+#city-input {
+  width: 260px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
+
+  color: #fff;
+  font-size: 15px;
+
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.05),
+              0 0 15px rgba(0,0,0,0.4);
+}
+
+#city-input::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+
+/* ======================================
+   BUTTON STYLING
+====================================== */
+button {
+  padding: 10px 25px;
+  border-radius: 10px;
+  border: 1px solid rgba(215,183,104,0.4);
+
+  background: linear-gradient(
+    140deg,
+    rgba(215,183,104,0.25),
+    rgba(255,220,160,0.12)
+  );
+  backdrop-filter: blur(6px);
+
+  color: #f5e4c3;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+
+  box-shadow: 0 0 20px rgba(0,0,0,0.35),
+              inset 0 0 12px rgba(255,255,255,0.05);
+
+  transition: 0.2s ease;
+  margin-bottom: 12px; /* espace supplémentaire */
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(215,183,104,0.5);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* ======================================
+   SECTIONS METEO (cachées au début)
+====================================== */
+.hidden {
+  display: none;
+}
+
+/* Conteneur météo */
+#weather-section {
+  margin-top: 40px;
+  width: 90%;
+  max-width: 450px;
+
+  padding: 20px;
+  border-radius: 15px;
+
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+/* TITRES SECTIONS */
+#weather-section h3 {
+  margin: 15px 0 10px;
+  text-shadow: 0 0 10px rgba(255,220,160,0.2);
+}
+
+/* Carte météo */
+.weather-card {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.city-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.big-temp {
+  font-size: 40px;
+  margin-top: 10px;
+}
+
+.icon {
+  font-size: 40px;
+  margin: 5px;
+}
+
+/* Détails */
+.detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+/* Prévisions horaires */
+.hourly-card {
+  margin-top: 20px;
+}
+
+#hourly-list {
+  display: flex;
+  gap: 10px;
+}
+
+.hourly-item {
+  flex: 1;
+  text-align: center;
+
+  background: rgba(255,255,255,0.08);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Alertes météo */
+.rain-alert {
+  border: 2px solid rgba(80,150,255,0.5);
+}
+
+.temp-alert {
+  border: 2px solid rgba(255,120,80,0.5);
+}
+
+/* Messages */
+#loading,
+#error-message {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+#error-message {
+  color: #ff6a6a;
+}

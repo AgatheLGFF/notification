@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Input</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>Ma petite searchbar</h1>
+  <input type="text" id="city-input" placeholder="Tape quelque chose...">
+  <button id="search-btn">appuie</button>
+  <button id="notify-btn">Miaou</button>
+  <div id="weather-section" class="hidden">
+
+    <div class="weather-card">
+      <h2 id="city-name" class="city-title"></h2>
+      <div id="weather-icon" class="icon"></div>
+      <p id="temperature" class="big-temp"></p>
+    </div>
+
+    <div class="details-card">
+      <h3>Détails</h3>
+
+      <div class="detail">
+        <span class="label">Vent :</span>
+        <span id="wind"></span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Humidité :</span>
+        <span id="humidity"></span>
+      </div>
+
+      <div class="detail">
+        <span class="label">Ressenti :</span>
+        <span id="feels-like"></span>
+      </div>
+    </div>
+
+    <div class="hourly-card">
+      <h3>Prévision horaire</h3>
+      <div id="hourly-list"></div>
+    </div>
+  </div>
+  <p id="loading" class="hidden">Chargement...</p>
+  <p id="error-message" class="hidden"></p>
+  <script src="app.js"></script>
+
+</body>
+
+</html>

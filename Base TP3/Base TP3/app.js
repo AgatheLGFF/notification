@@ -34,8 +34,14 @@ let currentCity = null;
 
 // ===== Initialisation =====
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Bienvenue");
     updateNotifyButton();
+    console.log("Bienvenue1");
     registerServiceWorker();
+    console.log("Bienvenue2");
+    elements.searchBtn.addEventListener('click',handleSearch);
+
+
 });
 
 // ===== Service Worker =====
@@ -117,6 +123,7 @@ function sendWeatherNotification(city, message, type = 'info') {
 }
 // ===== Recherche et API Météo =====
 async function handleSearch() {
+    console.log("test");
     const query = elements.cityInput.value.trim();
     
     if (!query) {
