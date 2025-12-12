@@ -135,6 +135,18 @@ async function requestNotificationPermission() {
 
 function sendWeatherNotification(city, message, type = 'info') {
 
+    if (!isNotificationSupported() || Notification.permission !== 'granted') return;
+
+    const icons = {
+        info: 'icons/icon-192.png',
+        rain: 'icons/rain.png',    // tu peux mettre tes icônes personnalisées
+        temp: 'icons/temp.png'
+    };
+
+    new Notification(`Météo à ${city}`, {
+        body: message,
+        icon: icons[type] || icons.info,
+    });
 }
 // ===== Recherche et API Météo =====
 async function handleSearch() {
