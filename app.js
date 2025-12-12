@@ -35,11 +35,12 @@ let currentCity = null;
 // ===== Initialisation =====
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Bienvenue");
-    updateNotifyButton();
+    requestNotificationPermission();
     console.log("Bienvenue1");
     registerServiceWorker();
     console.log("Bienvenue2");
-    elements.searchBtn.addEventListener('click',handleSearch);
+    elements.searchBtn.addEventListener('click', handleSearch);
+    elements.notifyBtn.addEventListener('click', updateNotifyButton);
 
 
 });
@@ -60,26 +61,38 @@ async function registerServiceWorker() {
 function isNotificationSupported() {
     return 'Notification' in window && typeof Notification !== 'undefined';
 }
-
+function condition(permission) {
+    console.log("testdemafonction");
+    if (permission === 'granted') {
+        permission = 'denied';
+        return permission;
+    } else if (permission === 'denied') {
+        permission = 'granted';
+        return permission;
+    }
+}
 function updateNotifyButton() {
+    console.log("on est dans l'updateNotifyButton");
     if (!isNotificationSupported()) {
         elements.notifyBtn.textContent = '🔔 Non disponible (iOS)';
         elements.notifyBtn.disabled = true;
         return;
     }
-    
+
     if (!('Notification' in window)) {
         elements.notifyBtn.textContent = '🔔 Notifications non supportées';
         elements.notifyBtn.disabled = true;
         return;
     }
 
-    const permission = Notification.permission;
-    
+    let permission = Notification.permission;
+
     if (permission === 'granted') {
         elements.notifyBtn.textContent = '✅ Notifications activées';
         elements.notifyBtn.classList.add('granted');
         elements.notifyBtn.classList.remove('denied');
+
+
     } else if (permission === 'denied') {
         elements.notifyBtn.textContent = '❌ Notifications bloquées';
         elements.notifyBtn.classList.add('denied');
@@ -88,9 +101,11 @@ function updateNotifyButton() {
         elements.notifyBtn.textContent = '🔔 Activer les notifications';
         elements.notifyBtn.classList.remove('granted', 'denied');
     }
+    condition(permission);
 }
 
 async function requestNotificationPermission() {
+    console.log("on est dans la notification");
     if (!('Notification' in window)) {
         showError('Les notifications ne sont pas supportées par votre navigateur.');
         return;
@@ -104,7 +119,7 @@ async function requestNotificationPermission() {
     try {
         const permission = await Notification.requestPermission();
         updateNotifyButton();
-        
+
         if (permission === 'granted') {
             // Notification de test
             new Notification('MétéoPWA', {
@@ -119,13 +134,13 @@ async function requestNotificationPermission() {
 }
 
 function sendWeatherNotification(city, message, type = 'info') {
-  
+
 }
 // ===== Recherche et API Météo =====
 async function handleSearch() {
     console.log("test");
     const query = elements.cityInput.value.trim();
-    
+
     if (!query) {
         showError('Veuillez entrer un nom de ville.');
         return;
@@ -139,21 +154,21 @@ async function handleSearch() {
         const geoResponse = await fetch(
             `${CONFIG.GEOCODING_API}?name=${encodeURIComponent(query)}&count=1&language=fr&format=json`
         );
-        
+
         if (!geoResponse.ok) throw new Error('Erreur de géocodage');
-        
+
         const geoData = await geoResponse.json();
-        
+
         if (!geoData.results || geoData.results.length === 0) {
             throw new Error(`Ville "${query}" non trouvée. Vérifiez l'orthographe.`);
         }
 
         const location = geoData.results[0];
         const cityName = `${location.name}${location.admin1 ? ', ' + location.admin1 : ''}, ${location.country}`;
-        
+
         // 2. Récupérer la météo
         await fetchWeather(location.latitude, location.longitude, cityName);
-        
+
     } catch (error) {
         hideLoading();
         showError(error.message);
@@ -175,18 +190,18 @@ async function fetchWeather(lat, lon, cityName) {
         if (!weatherResponse.ok) throw new Error('Erreur lors de la récupération des données météo');
 
         const weatherData = await weatherResponse.json();
-        
+
         // Sauvegarder la ville courante
         currentCity = { name: cityName, lat, lon };
-        
+
         // Afficher les résultats
         displayWeather(weatherData, cityName);
-        
+
         // Vérifier les alertes pour les 4 prochaines heures
         checkWeatherAlerts(weatherData, cityName);
-        
+
         hideLoading();
-        
+
     } catch (error) {
         hideLoading();
         showError(error.message);
@@ -208,7 +223,7 @@ function displayWeather(data, cityName) {
     // Prévisions horaires (4 prochaines heures)
     const currentHour = new Date().getHours();
     const hourlyItems = [];
-    
+
     for (let i = 0; i < 4; i++) {
         const hourIndex = currentHour + i + 1;
         if (hourIndex < hourly.time.length) {
@@ -217,7 +232,7 @@ function displayWeather(data, cityName) {
             const code = hourly.weather_code[hourIndex];
             const isRain = CONFIG.RAIN_CODES.includes(code);
             const isHighTemp = temp > CONFIG.TEMP_THRESHOLD;
-            
+
             let alertClass = '';
             if (isRain) alertClass = 'rain-alert';
             else if (isHighTemp) alertClass = 'temp-alert';
@@ -239,7 +254,7 @@ function displayWeather(data, cityName) {
 function checkWeatherAlerts(data, cityName) {
     const hourly = data.hourly;
     const currentHour = new Date().getHours();
-    
+
     let rainAlert = false;
     let tempAlert = false;
     let rainHour = null;
@@ -251,13 +266,13 @@ function checkWeatherAlerts(data, cityName) {
         if (hourIndex < hourly.time.length) {
             const code = hourly.weather_code[hourIndex];
             const temp = hourly.temperature_2m[hourIndex];
-            
+
             // Vérifier la pluie
             if (!rainAlert && CONFIG.RAIN_CODES.includes(code)) {
                 rainAlert = true;
                 rainHour = i;
             }
-            
+
             // Vérifier la température > 10°C
             if (!tempAlert && temp > CONFIG.TEMP_THRESHOLD) {
                 tempAlert = true;
@@ -316,7 +331,7 @@ function getWeatherEmoji(code) {
         96: '⛈️',     // Thunderstorm with slight hail
         99: '⛈️'      // Thunderstorm with heavy hail
     };
-    
+
     return weatherEmojis[code] || '🌤️';
 }
 
